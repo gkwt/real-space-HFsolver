@@ -1,13 +1,13 @@
-% EECE 531 Assignment 2
 % Solve the HF equations
 
 close all; 
 clear all;
 
 % helium
-n = 10;
+n = 10.;
 box = 10.;
 dx = box/n;
+nelectrons = 2;
 % grid3d = zeros(n,n,n);
 % flat_grid3d = reshape(grid3d,[1,n^3]);
 
@@ -17,11 +17,13 @@ ionInt = rIonCoul(n, 2., [box/2.,box/2.,box/2.]/dx); % ion in the centre
 H_elec = (-0.5/dx^2)* lap + ionInt;
 
 % coulomb and exchange hamiltonians
-guess = ones(n^3,n^3)./sqrt(n^3);
-[HeE, HeState, HeEtot] = HFsolver(n, H_elec, guess, 0.0005, 2);
+guess = ones(n^3,nelectrons/2)./(n.^3);
+[HeE, HeState, HeEtot] = HFsolver(n, H_elec, guess, dx, 0.000000005);
 disp(['The He total energy:  ', num2str(HeEtot), ' Ha'])
 disp(['The He first orbital energy:  ', num2str(HeE(2)), ' Ha'])
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Hydrogen molecule (H2) the coordinates
 n = 10;
@@ -40,8 +42,8 @@ ionInt = rIonCoul(n, 1., h1) + rIonCoul(n, 1., h2);
 H_elec = (-0.5/dx^2)*lap + ionInt;
 
 % coulomb and exchange hamiltonians
-guess = ones(n^3,n^3)./sqrt(n^3);
-[H2E, H2State, H2Etot] = HFsolver(n, H_elec, guess, 0.0005, 1);
+guess = ones(n^3,nelectrons/2)./sqrt(n^3);
+[H2E, H2State, H2Etot] = HFsolver(n, H_elec, guess, dx, 0.0005);
 
 disp(['The H2 total energy:  ', num2str(H2Etot), ' Ha'])
 disp(['The H2 first orbital energy:  ', num2str(H2E(2)), ' Ha'])
